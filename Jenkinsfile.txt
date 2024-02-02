@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'MAVEN_HOME'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    bat 'mvn clean package'
+                }
+            }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
+                script {
+                    deploy adapters: [tomcat9(credentialsId: 'd0bab624-a3a8-4a59-a6ab-3cdd8cd92fe4', path: '', url: 'http://localhost:8082/')], contextPath: null, war: '**/*.war'
+                    }
+                }
+            }
+        }
+    }
